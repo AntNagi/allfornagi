@@ -1,0 +1,10 @@
+posts/_inbox/
+_*.py
+_*.txt
+_*.log
+*.log
+*.bak
+posts.js.bak*
+index.html.bak*
+posts/ai/ai_lovestate/
+posts/romance/romance_visit/
