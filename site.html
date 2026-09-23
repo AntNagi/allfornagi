@@ -277,7 +277,9 @@
   footer .sm{margin-top:10px;color:#3a4666;font-size:11px;letter-spacing:1px;}
 
   /* ====== 头图轮播 BANNER（第一屏；第 1 张 NagiChat，第 2 张 Nagi's Heart）====== */
-  /* 每张两套图：PC 1920×1080、移动端（≤768px）1080×1920，替换 banners/ 下同名文件即可 */
+  /* 每张两套图：PC 1920×1080 铺满第一屏，文字叠在图上；
+     移动端（≤768px）1080×720 横版 banner，从顶栏下方开始，文字和按钮排在图下方。
+     替换 banners/ 下同名文件即可，要求见 banners/BANNER_SPEC.md */
   .banner{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;background:var(--ink);}
   .banner-track{display:flex;height:100%;overflow-x:auto;overflow-y:hidden;
     scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;overscroll-behavior-x:contain;}
@@ -309,9 +311,17 @@
   .banner-dots button{width:10px;height:10px;padding:0;border:none;border-radius:5px;cursor:pointer;
     background:rgba(244,248,255,0.35);transition:.3s;}
   .banner-dots button[aria-current="true"]{width:30px;background:var(--cyan);box-shadow:0 0 10px var(--cyan);}
-  @media(max-width:768px){.banner-arrow{display:none;}}
+  @media(max-width:768px){
+    .banner{height:auto;min-height:0;padding-top:var(--header-h,76px);}
+    .banner-track{height:auto;}
+    .banner-slide{height:auto;}
+    .banner-slide picture{height:auto;aspect-ratio:3/2;}
+    .app-cta{position:static;background:none;padding:20px 24px 52px;gap:10px;}
+    .banner-dots{bottom:20px;}
+    .banner-arrow{display:none;}
+  }
   @media(max-width:600px){
-    .app-cta{padding:40px 16px 64px;}
+    .app-cta{padding:18px 16px 50px;}
     .app-cta p{font-size:14px;}
     .app-btns{width:100%;}
     .app-btn{flex:1 1 0;min-width:0;padding:12px 14px;}
@@ -603,6 +613,11 @@ function showHome(){
 }
 
 /* ====== 头图轮播：原生横向滚动 + 吸附，手指滑、箭头、圆点都能切；6 秒自动切，碰到就暂停 ====== */
+// 手机上顶栏会折行，高度不固定；banner 从顶栏下方开始，按实际高度留位置。
+const headerEl = document.querySelector('header');
+function syncHeaderHeight(){ document.documentElement.style.setProperty('--header-h', headerEl.offsetHeight + 'px'); }
+syncHeaderHeight();
+window.addEventListener('resize', syncHeaderHeight);
 const bannerTrack = document.getElementById('banner-track');
 const bannerDots = [...document.querySelectorAll('#banner-dots button')];
 let bannerIndex = 0, bannerTimer = null;
