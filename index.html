@@ -277,27 +277,27 @@
   footer .sm{margin-top:10px;color:#3a4666;font-size:11px;letter-spacing:1px;}
 
   /* ====== 头图轮播 BANNER（第一屏；第 1 张 NagiChat，第 2 张 Nagi's Heart）====== */
-  /* 每张两套图：PC 1920×1080 铺满第一屏，文字叠在图上；
-     移动端（≤768px）1080×720 横版 banner，从顶栏下方开始，文字和按钮排在图下方。
+  /* 标题、简介、花字都做在图里；网页只放按钮，标题简介对视觉隐藏（读屏和搜索仍可见）。
+     电脑版：1920×1080，宽度铺满、按 16:9 等比显示不裁切；屏宽 ≥1024 时按钮叠在图上，位置用图片百分比坐标，
+             每张可在 .banner-slide 上用 --cta-x / --cta-y 单独调（默认左 6.5%、上 76%）；更窄时排在图下方。
+     手机版（≤768px）：1080×720 横版，从顶栏下方开始，按钮排在图下方。
      替换 banners/ 下同名文件即可，要求见 banners/BANNER_SPEC.md */
-  .banner{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;background:var(--ink);}
-  .banner-track{display:flex;height:100%;overflow-x:auto;overflow-y:hidden;
+  .banner{position:relative;overflow:hidden;background:var(--ink);}
+  .banner-track{display:flex;overflow-x:auto;overflow-y:hidden;
     scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;overscroll-behavior-x:contain;}
   .banner-track::-webkit-scrollbar{display:none;}
-  .banner-slide{position:relative;flex:0 0 100%;height:100%;scroll-snap-align:start;scroll-snap-stop:always;}
-  .banner-slide picture,.banner-slide img{display:block;width:100%;height:100%;}
-  .banner-slide img{object-fit:cover;}
-  .app-cta{position:absolute;left:0;right:0;bottom:0;padding:80px 50px 84px;
-    display:flex;flex-direction:column;align-items:flex-start;gap:14px;
-    background:linear-gradient(to top,rgba(5,6,8,0.92),rgba(5,6,8,0));}
-  .app-cta h2{font-size:clamp(32px,5vw,64px);font-weight:900;letter-spacing:-.02em;line-height:1;}
-  .app-cta p{color:#aab8d8;max-width:560px;line-height:1.7;font-size:15px;}
-  .app-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px;}
-  .app-btn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:170px;
-    padding:12px 26px;border-radius:999px;font-weight:800;font-size:15px;letter-spacing:1px;text-decoration:none;
+  .banner-slide{position:relative;flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;}
+  .banner-slide picture{display:block;width:100%;aspect-ratio:16/9;}
+  .banner-slide img{display:block;width:100%;height:100%;object-fit:cover;}
+  .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+  .app-cta{position:absolute;left:var(--cta-x,6.5%);top:var(--cta-y,76%);}
+  .app-btns{display:flex;flex-wrap:wrap;gap:clamp(8px,0.8vw,14px);}
+  .app-btn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
+    min-width:clamp(128px,10.5vw,190px);padding:clamp(9px,0.75vw,13px) clamp(18px,1.6vw,28px);border-radius:999px;
+    font-weight:800;font-size:clamp(13px,1vw,17px);letter-spacing:1px;text-decoration:none;
     color:var(--ink);background:var(--cyan);box-shadow:0 0 18px rgba(79,232,255,0.45);transition:.2s;}
   .app-btn:hover{transform:translateY(-2px);box-shadow:0 0 26px rgba(79,232,255,0.7);}
-  .app-btn.ghost{background:rgba(5,6,8,0.4);color:var(--white);border:1.5px solid var(--cyan);box-shadow:none;}
+  .app-btn.ghost{background:rgba(5,6,8,0.45);color:var(--white);border:1.5px solid var(--cyan);box-shadow:none;}
   .app-btn small{font-size:11px;font-weight:600;opacity:.75;letter-spacing:.5px;margin-top:2px;}
   .app-btn small:empty{display:none;}
   .app-btn[aria-disabled="true"]{pointer-events:none;opacity:.45;}
@@ -307,24 +307,23 @@
   .banner-arrow:hover{border-color:var(--cyan);color:var(--cyan);}
   .banner-arrow.prev{left:24px;}
   .banner-arrow.next{right:24px;}
-  .banner-dots{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);z-index:5;display:flex;gap:10px;}
+  .banner-dots{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);z-index:5;display:flex;gap:10px;}
   .banner-dots button{width:10px;height:10px;padding:0;border:none;border-radius:5px;cursor:pointer;
     background:rgba(244,248,255,0.35);transition:.3s;}
   .banner-dots button[aria-current="true"]{width:30px;background:var(--cyan);box-shadow:0 0 10px var(--cyan);}
-  @media(max-width:768px){
-    .banner{height:auto;min-height:0;padding-top:var(--header-h,76px);}
-    .banner-track{height:auto;}
-    .banner-slide{height:auto;}
-    .banner-slide picture{height:auto;aspect-ratio:3/2;}
-    .app-cta{position:static;background:none;padding:20px 24px 52px;gap:10px;}
-    .banner-dots{bottom:20px;}
-    .banner-arrow{display:none;}
+  /* 平板（<1024px）按钮相对图片太大，改排在图下方 */
+  @media(max-width:1023px){
+    .app-cta{position:static;padding:18px 24px 48px;}
+    .banner-dots{bottom:18px;}
   }
-  @media(max-width:600px){
-    .app-cta{padding:18px 16px 50px;}
-    .app-cta p{font-size:14px;}
+  @media(max-width:768px){
+    .banner{padding-top:var(--header-h,76px);}
+    .banner-slide picture{aspect-ratio:3/2;}
+    .app-cta{position:static;padding:16px 16px 44px;}
     .app-btns{width:100%;}
-    .app-btn{flex:1 1 0;min-width:0;padding:12px 14px;}
+    .app-btn{flex:1 1 0;min-width:0;padding:12px 14px;font-size:15px;}
+    .banner-dots{bottom:16px;}
+    .banner-arrow{display:none;}
   }
 </style>
 </head>
@@ -351,8 +350,8 @@
             <img src="banners/nagichat-pc.jpg" alt="NagiChat">
           </picture>
           <div class="app-cta">
-            <h2>NagiChat</h2>
-            <p>这里住着 Nagi。他有自己的作息、训练和比赛，会偷懒，也会记得和你说过的话。</p>
+            <h2 class="sr-only">NagiChat</h2>
+            <p class="sr-only">这里住着 Nagi。他有自己的作息、训练和比赛，会偷懒，也会记得和你说过的话。</p>
             <div class="app-btns">
               <a class="app-btn" href="/downloads/nagichat/latest.apk" data-release="nagichat">Android 下载<small></small></a>
             </div>
@@ -364,8 +363,8 @@
             <img src="banners/nagisheart-pc.jpg" alt="Nagi's Heart">
           </picture>
           <div class="app-cta">
-            <h2>Nagi's Heart</h2>
-            <p>乙女向视觉小说。网页版打开就能玩，也可以下载 Android 版。</p>
+            <h2 class="sr-only">Nagi's Heart</h2>
+            <p class="sr-only">乙女向视觉小说。网页版打开就能玩，也可以下载 Android 版。</p>
             <div class="app-btns">
               <a class="app-btn" href="https://play.nagisheart.fun/" target="_blank" rel="noopener">进入网页版</a>
               <a class="app-btn ghost" href="/downloads/nagisheart/latest.apk" data-release="nagisheart">Android 下载<small></small></a>
