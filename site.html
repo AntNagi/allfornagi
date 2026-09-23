@@ -342,6 +342,35 @@
   footer .by{margin-top:14px;color:#aeb9d6;font-size:13px;letter-spacing:1px;}
   footer .by b{color:var(--cyan);}
   footer .sm{margin-top:10px;color:#3a4666;font-size:11px;letter-spacing:1px;}
+
+  /* ====== 应用 BANNER（NagiChat 第一屏 / Nagi's Heart）====== */
+  /* 每个 banner 两套图：PC 和移动端（≤768px），替换 banners/ 下同名文件即可 */
+  .app-banner{position:relative;overflow:hidden;background:var(--ink);}
+  .app-banner picture,.app-banner img{display:block;width:100%;height:100%;}
+  .app-banner img{object-fit:cover;}
+  #nagichat{height:100vh;height:100svh;min-height:560px;}
+  #nagisheart{aspect-ratio:1920/800;}
+  @media(max-width:768px){#nagisheart{aspect-ratio:1080/1440;}}
+  .app-cta{position:absolute;left:0;right:0;bottom:0;padding:60px 50px 56px;
+    display:flex;flex-direction:column;align-items:flex-start;gap:14px;
+    background:linear-gradient(to top,rgba(5,6,8,0.92),rgba(5,6,8,0));}
+  .app-cta h2{font-size:clamp(32px,5vw,64px);font-weight:900;letter-spacing:-.02em;line-height:1;}
+  .app-cta p{color:#aab8d8;max-width:560px;line-height:1.7;font-size:15px;}
+  .app-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px;}
+  .app-btn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:170px;
+    padding:12px 26px;border-radius:999px;font-weight:800;font-size:15px;letter-spacing:1px;text-decoration:none;
+    color:var(--ink);background:var(--cyan);box-shadow:0 0 18px rgba(79,232,255,0.45);transition:.2s;}
+  .app-btn:hover{transform:translateY(-2px);box-shadow:0 0 26px rgba(79,232,255,0.7);}
+  .app-btn.ghost{background:rgba(5,6,8,0.4);color:var(--white);border:1.5px solid var(--cyan);box-shadow:none;}
+  .app-btn small{font-size:11px;font-weight:600;opacity:.75;letter-spacing:.5px;margin-top:2px;}
+  .app-btn small:empty{display:none;}
+  .app-btn[aria-disabled="true"]{pointer-events:none;opacity:.45;}
+  @media(max-width:600px){
+    .app-cta{padding:40px 16px 36px;}
+    .app-cta p{font-size:14px;}
+    .app-btns{width:100%;}
+    .app-btn{flex:1 1 0;min-width:0;padding:12px 14px;}
+  }
 </style>
 </head>
 <body>
@@ -349,6 +378,8 @@
     <div class="brand"><span class="mark">凪</span><span class="brand-txt">EGO ARCHIVE<em>by AntNagi · 为凪诚士郎而建</em></span></div>
     <nav>
       <a onclick="showHome()">Home</a>
+      <a onclick="goSection('nagichat')">NagiChat</a>
+      <a onclick="goSection('nagisheart')">Nagi's Heart</a>
       <a onclick="document.getElementById('profile').scrollIntoView()">Profile</a>
       <a onclick="document.getElementById('catnav').scrollIntoView()">Archive</a>
       <a href="https://www.xiaohongshu.com/user/profile/64e06cd000000000010101d0" target="_blank">REDNOTE</a>
@@ -356,6 +387,37 @@
   </header>
 
   <div id="home">
+    <!-- NAGICHAT（第一屏） -->
+    <section class="app-banner" id="nagichat">
+      <picture>
+        <source media="(max-width: 768px)" srcset="banners/nagichat-mobile.jpg">
+        <img src="banners/nagichat-pc.jpg" alt="NagiChat">
+      </picture>
+      <div class="app-cta">
+        <h2>NagiChat</h2>
+        <p>这里住着 Nagi。他有自己的作息、训练和比赛，会偷懒，也会记得和你说过的话。</p>
+        <div class="app-btns">
+          <a class="app-btn" href="/downloads/nagichat/latest.apk" data-release="nagichat">Android 下载<small></small></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAGI'S HEART -->
+    <section class="app-banner" id="nagisheart">
+      <picture>
+        <source media="(max-width: 768px)" srcset="banners/nagisheart-mobile.jpg">
+        <img src="banners/nagisheart-pc.jpg" alt="Nagi's Heart" loading="lazy">
+      </picture>
+      <div class="app-cta">
+        <h2>Nagi's Heart</h2>
+        <p>乙女向视觉小说。网页版打开就能玩，也可以下载 Android 版。</p>
+        <div class="app-btns">
+          <a class="app-btn" href="https://play.nagisheart.fun/" target="_blank" rel="noopener">进入网页版</a>
+          <a class="app-btn ghost" href="/downloads/nagisheart/latest.apk" data-release="nagisheart">Android 下载<small></small></a>
+        </div>
+      </div>
+    </section>
+
     <!-- HERO -->
     <section class="hero">
       <div class="photo"></div>
@@ -611,6 +673,24 @@ function showHome(){
   document.getElementById('home').style.display = 'block';
   window.scrollTo({top:homeScroll,behavior:'instant'}); // 回到进专辑前的位置
 }
+function goSection(id){
+  showHome();
+  document.getElementById(id).scrollIntoView();
+}
+
+/* ====== 安装包版本：读 /downloads/<app>/latest.json，没发布过就置灰 ====== */
+document.querySelectorAll('[data-release]').forEach(async a=>{
+  const small = a.querySelector('small');
+  try{
+    const r = await fetch(`/downloads/${a.dataset.release}/latest.json`,{cache:'no-cache'});
+    if(!r.ok) throw new Error(r.status);
+    const j = await r.json();
+    small.textContent = `v${j.version} · ${Math.round(j.size/1048576)} MB`;
+  }catch(e){
+    a.setAttribute('aria-disabled','true');
+    small.textContent = '暂未发布';
+  }
+});
 
 /* ====== 帖子详情 + 轮播 ====== */
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
