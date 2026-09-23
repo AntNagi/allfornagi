@@ -300,10 +300,14 @@
     font-weight:800;font-size:clamp(13px,1vw,17px);letter-spacing:1px;text-decoration:none;
     color:var(--ink);background:var(--accent);box-shadow:0 0 18px rgba(var(--accent-rgb),0.45);transition:.2s;}
   .app-btn:hover{transform:translateY(-2px);box-shadow:0 0 26px rgba(var(--accent-rgb),0.7);}
-  .app-btn.ghost{background:rgba(var(--ink-rgb),0.45);color:var(--white);border:1.5px solid var(--accent);box-shadow:none;}
+  .app-btn.ghost{background:rgba(var(--ink-rgb),0.6);color:var(--white);border:1.5px solid var(--accent);box-shadow:none;
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
   .app-btn small{font-size:11px;font-weight:600;opacity:.75;letter-spacing:.5px;margin-top:2px;}
   .app-btn small:empty{display:none;}
-  .app-btn[aria-disabled="true"]{pointer-events:none;opacity:.45;}
+  /* 没发布过的安装包：不透明深色磨砂底 + 灰字，一眼看出不可点，但按钮本身是完整的 */
+  .app-btn[aria-disabled="true"]{pointer-events:none;background:rgba(var(--ink-rgb),0.78);
+    color:rgba(245,241,234,0.55);border:1.5px solid rgba(245,241,234,0.2);box-shadow:none;
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
   .banner-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:48px;height:48px;border-radius:50%;
     border:1.5px solid rgba(var(--accent-rgb),0.5);background:rgba(var(--ink-rgb),0.45);color:var(--white);font-size:26px;line-height:1;
     cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;}
