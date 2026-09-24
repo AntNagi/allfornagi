@@ -1,6 +1,6 @@
-# 主站头图轮播：四张 banner 图片要求
+# 主站头图轮播：六张 banner 图片要求
 
-主站 `nagisheart.fun` 第一屏是一个左右滑动的轮播，共两张：第 1 张 NagiChat，第 2 张 Nagi's Heart。每张有电脑、手机两个版本，一共四张图。
+主站 `nagisheart.fun` 第一屏是一个左右滑动的轮播，共三张：第 1 张 NagiChat，第 2 张 Nagi's Heart，第 3 张 Prince & Princess。每张有电脑、手机两个版本，一共六张图。
 
 ## 一、文件清单
 
@@ -10,6 +10,8 @@
 | `nagichat-mobile.jpg` | NagiChat · 手机 | 1080 × 720 | 3:2 |
 | `nagisheart-pc.jpg` | Nagi's Heart · 电脑 | 1920 × 1080 | 16:9 |
 | `nagisheart-mobile.jpg` | Nagi's Heart · 手机 | 1080 × 720 | 3:2 |
+| `princeprincess-pc.jpg` | Prince & Princess · 电脑 | 1920 × 1080 | 16:9 |
+| `princeprincess-mobile.jpg` | Prince & Princess · 手机 | 1080 × 720 | 3:2 |
 
 - 电脑版底图如果不足 1920 宽（如 1672 × 941），也按 16:9 交付即可；能导出 1920 × 1080 更清晰。
 
